@@ -1,4 +1,4 @@
-# variable.tf defines all input variables
+# variable.tf defines all input variables.
 
 variable "aws_region" {
     default = "us-east-1"
