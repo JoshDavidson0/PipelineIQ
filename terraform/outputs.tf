@@ -1,4 +1,5 @@
 # outputs.tf defines the values terraform will print to the terminal after terraform apply completes
+# this will be helpful for the lamdba function to connect the s3 bucket to the postgres database
 
 
 output "s3_bucket_name" {
