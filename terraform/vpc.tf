@@ -5,7 +5,7 @@ resource "aws_vpc" "main" {
     cidr_block = "10.0.0.0/16"
     enable_dns_hostnames = true
     enable_dns_support = true
-    tags = { Name = "${var.project._name}-vpc" }
+    tags = { Name = "${var.project_name}-vpc" }
   
 }
 
@@ -37,7 +37,7 @@ resource "aws_db_subnet_group" "main" {
 # Outbound traffic can go wherever necessary.
 resource "aws_security_group" "rds" {
     name = "${var.project_name}-rds-sg"
-    vpc_id = awss_vpc.main.id
+    vpc_id = aws_vpc.main.id
 
     ingress {
         from_port = 5432
