@@ -1,5 +1,6 @@
 # ec2.tf defines the public subnet for the ec2 instance and internet gateway necessary for the VP
 # this file also creates a routing table and connect it to the public subnet. 
+# Additionally, an EC2 instance is created with its security group.
 
 resource "aws_subnet" "public" {
     vpc_id = aws_vpc.main.id
@@ -38,4 +39,49 @@ resource "aws_route_table" "public" {
 resource "aws_route_table_association" "public" {
     subnet_id = aws_subnet.public.id
     route_table_id = aws_route_table.public.id
+}
+
+# The goal here is to create the security group for EC2 with two inbound rules, one for SSH, and one for FastAPI.
+# the egress allows outbound traffic to go wherever necessary.
+resource "aws_security_group" "ec2" {
+    name = "${var.project_name}-ec2-sg"
+    vpc_id = aws_vpc.main.id
+
+    ingress {
+        from_port = 22
+        to_port = 22
+        protocol = "tcp"
+        cidr_blocks = ["0.0.0.0/0"]
+    }
+
+    ingress {
+        from_port = 8000
+        to_port = 8000
+        protocol = "tcp"
+        cidr_blocks = ["0.0.0.0/0"]
+    }
+
+    egress {
+        from_port = 0
+        to_port = 0
+        protocol = "-1"
+        cidr_blocks = ["0.0.0.0/0"]
+    }
+
+    tags = {
+        Name = "${var.project_name}-ec2-sg"
+    }
+}
+
+# The goal here is to create the EC2 instance that will run the docker container.
+resource "aws_instance" "app" {
+    ami = "ami-0c02fb55956c7d316"
+    instance_type = "t2.micro"
+    subnet_id = aws_subnet.public.id
+    vpc_security_group_ids = [aws_security_group.ec2.id]
+    key_name = var.key_pair_name
+    
+    tags = {
+        Name = "${var.project_name}-ec2"
+    }
 }

@@ -19,3 +19,8 @@ variable "db_password" {
     type = string
     sensitive = true
 }
+
+variable "key_pair_name" {
+    description = "Name of EC2 key pair for SSH"
+    type = string
+}
