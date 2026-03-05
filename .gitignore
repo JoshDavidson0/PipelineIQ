@@ -1,0 +1,12 @@
+.env
+terraform.tfvars
+**/.terraform/
+*.tfstate
+*.tfstate.backup
+*.tfstate.*.backup
+.terraform.lock.hcl
+*.zip
+lambda/psycopg2_binary.libs/
+lambda/psycopg2/
+lambda/psycopg2_binary-*.dist-info/
+lambda/__pycache__/
