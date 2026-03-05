@@ -10,3 +10,4 @@ lambda/psycopg2_binary.libs/
 lambda/psycopg2/
 lambda/psycopg2_binary-*.dist-info/
 lambda/__pycache__/
+__pycache__/
