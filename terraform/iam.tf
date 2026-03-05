@@ -1,4 +1,4 @@
-# Defines the role Lamda can assume.
+# Defines the role Lambda can assume.
 resource "aws_iam_role" "lambda_exec" {
     name = "${var.project_name}-lambda-role"
     assume_role_policy = jsonencode({
@@ -7,6 +7,19 @@ resource "aws_iam_role" "lambda_exec" {
             Action = "sts:AssumeRole"
             Effect = "Allow"
             Principal = { Service = "lambda.amazonaws.com"}
+        }]
+    })
+}
+
+# Defines the role EC2 can assume
+resource "aws_iam_role" "ec2_role" {
+    name = "${var.project_name}-ec2-role"
+    assume_role_policy = jsonencode({
+        Version = "2012-10-17"
+        Statement = [{
+            Action = "sts:AssumeRole"
+            Effect = "Allow"
+            Principal = { Service = "ec2.amazonaws.com" }
         }]
     })
 }
@@ -44,5 +57,35 @@ resource "aws_iam_role_policy" "lambda_permissions" {
     Action = ["ec2:CreateNetworkInterface","ec2:DescribeNetworkInterfaces","ec2:DeleteNetworkInterface"]
     Resource = "*"
     }]
-})
+    })
+}
+
+# Allow EC2 to pull images from ECR
+resource "aws_iam_role_policy" "ec2_ecr_policy" {
+    name = "${var.project_name}-ec2-ecr-policy"
+    role = aws_iam_role.ec2_role.id
+    policy = jsonencode({
+        Version = "2012-10-17"
+        Statement = [
+        {
+            Effect = "Allow"
+            Action = [
+                "ecr:GetAuthorizationToken",
+                "ecr:BatchGetImage",
+                "ecr:GetDownloadUrlForLayer"
+            ]
+            Resource = "*"
+        },
+        {
+            Effect = "Allow"
+            Action = ["secretsmanager:GetSecretValue"]
+            Resource = "arn:aws:secretsmanager:us-east-1:688933601990:secret:pipelineiq/db-*"
+        }]
+    })
+}
+
+# Instance profile wraps the role so EC2 can use it
+resource "aws_iam_instance_profile" "ec2_profile" {
+    name = "${var.project_name}-ec2-profile"
+    role = aws_iam_role.ec2_role.name
 }

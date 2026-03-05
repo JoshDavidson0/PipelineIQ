@@ -16,7 +16,7 @@ def get_uploads(tag: Optional[str] = Query(default=None)):
             FROM uploads u
             JOIN results r ON r.upload_id = u.id
             WHERE LOWER(r.label) = LOWER(%s)
-        """, (tag))
+        """, (tag,))
     else:
         cur.execute("SELECT id, filename, uploaded_at FROM uploads")
 
