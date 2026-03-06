@@ -1,3 +1,5 @@
+# Connect to AWS Secrets manager to fetch credentials, then opens and returns a Postgres connection using those credentials.
+
 import boto3
 import json
 import psycopg2

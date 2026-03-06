@@ -1,3 +1,5 @@
+# Defines the API endpoints that query Postgres and return upload and label data to the user. 
+
 from fastapi import FastAPI, Query
 from typing import List, Optional
 from database import get_connection

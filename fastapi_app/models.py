@@ -1,3 +1,5 @@
+# Define the shape of data the API returns so FastAPI will know how to validate and serialize uploads and labels into JSON. 
+
 from pydantic import BaseModel
 from datetime import datetime
 from typing import List, Optional

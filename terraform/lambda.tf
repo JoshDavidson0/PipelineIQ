@@ -1,11 +1,12 @@
 
-
+# Zips the lambda/handler.py file into a deployment package AWS can upload.
 data "archive_file" "lambda_zip" {
     type = "zip"
     source_dir = "${path.module}/../lambda"
     output_path = "${path.module}/../lambda.zip"
 }
 
+# Creates the lambda function in AWS and uses the zip as the code source.
 resource "aws_lambda_function" "processor" {
     filename = data.archive_file.lambda_zip.output_path
     function_name = "${var.project_name}-processor"
