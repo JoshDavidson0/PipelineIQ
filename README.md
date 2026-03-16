@@ -1,4 +1,4 @@
-# PipelineIQ
+# AWS Pipeline
 Gaining familiarity with IaaC and Cloud tools with assistance from Claude.
 
 An event-driven cloud pipeline that automatically processes uploaded images using AWS Rekognition, stores results in PostgreSQL, and exposes the data through a REST API.
